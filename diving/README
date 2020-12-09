@@ -1,0 +1,143 @@
+Diving Tools: Random collection of little programs related to diving
+================================================================================
+
+DISCLAIMER: THESE ARE EDUCATIONAL TOYS. DO NOT UNDER ANY CIRCUMSTANCES USE THEM
+	    FOR REAL DIVES OR REAL ASCENTS TO ALTITUDE AFTER DIVING.
+
+Internally, all pressures are in Bar, and all times are in seconds.
+
+A number of things normally accounted for in models (e.g. water vapor in breath)
+are not accounted for. Generally, this should make the code too conservative.
+
+The calculations assume square profiles and instant depth changes, so in general
+they should give overestimates of loading. Be sure to add a surface interval at
+the end, otherwise no off-gassing is accounted for at all in the ascent.
+
+The programs are all configurable with the following arguments:
+
+	-g:	Change the GF-Hi used to compute ceilings (default 100)
+	-a:	Change the surface pressure (default 1.013bar)
+	-p:	Change PPN2 for calculations (default 0.79 (air))
+	-m:	Change the model used (default "Buhlmann ZH-L16C Nitrogen")
+	-n:	Show negative pressures, instead of just displaying zero
+
+When changing the PPN2 setting, we assume air is breathed during surface
+intervals (any vector where ambiant pressure is >= surface pressure).
+
+-------------------
+Altitude Calculator
+-------------------
+
+This tool uses a set of dives and surface intervals you provide to calculate
+minimum ambiant pressures tolerable without exceeding the M-values (+GF) for
+various Haldanian decompression models.
+
+To use the tool, simply provide a series of "TIME DEPTH" pairs on the command
+line (meters and feet are supported). For example, this computes GF100 ceilings
+after a series of dives I did in Catalina last a few weeks ago:
+
+	{0}[calvinow@Mozart ~] ./altitude-calculator -p 0.68 :40 66ft 1:19 0ft \
+		:45 77ft 1:58 0ft :40 87ft 1:51 0ft :36 92ft 3:25 0ft \
+		:44 69ft 10:27 0ft :31 92ft 1:21 0ft :35 87ft 2:15 0ft \
+		:51 59ft 3: 0ft
+	00> '   :40   66ft' =>    2400s at  2.064 bar
+	01> '  1:19    0ft' =>    4740s at  0.800 bar
+	02> '   :45   77ft' =>    2700s at  2.293 bar
+	03> '  1:58    0ft' =>    7080s at  0.800 bar
+	04> '   :40   87ft' =>    2400s at  2.502 bar
+	05> '  1:51    0ft' =>    6660s at  0.800 bar
+	06> '   :36   92ft' =>    2160s at  2.606 bar
+	07> '  3:25    0ft' =>   12300s at  0.800 bar
+	08> '   :44   69ft' =>    2640s at  2.127 bar
+	09> ' 10:27    0ft' =>   37620s at  0.800 bar
+	10> '   :31   92ft' =>    1860s at  2.606 bar
+	11> '  1:21    0ft' =>    4860s at  0.800 bar
+	12> '   :35   87ft' =>    2100s at  2.502 bar
+	13> '  2:15    0ft' =>    8100s at  0.800 bar
+	14> '   :51   59ft' =>    3060s at  1.918 bar
+	15> '    3:    0ft' =>   10800s at  0.800 bar
+	Computing loads...
+	Computing ceilings...
+	Load: 0.800 Ceil: 0.000   infft   infm
+	Load: 0.800 Ceil: 0.000   infft   infm
+	Load: 0.800 Ceil: 0.000   infft   infm
+	Load: 0.800 Ceil: 0.000   infft   infm
+	Load: 0.801 Ceil: 0.000   infft   infm
+	Load: 0.808 Ceil: 0.052 40000ft 12192m
+	Load: 0.827 Ceil: 0.247 30000ft  9144m
+	Load: 0.861 Ceil: 0.393 20000ft  6096m
+	Load: 0.904 Ceil: 0.516 15000ft  4572m
+	Load: 0.947 Ceil: 0.619 10000ft  3048m
+	Load: 0.975 Ceil: 0.698  9000ft  2743m
+	Load: 0.991 Ceil: 0.756  7000ft  1829m
+	Load: 1.000 Ceil: 0.804  6000ft  1524m
+	Load: 1.004 Ceil: 0.848  4000ft  1219m
+	Load: 1.005 Ceil: 0.885  3500ft  1067m
+	Load: 1.001 Ceil: 0.908  2500ft   762m
+	Load: 0.994 Ceil: 0.921  2500ft   762m
+
+The table below has the conversion values used to calculate altitude, which were
+thoughtlessly copy-pasted from the first Google search result:
+
+	1.013	    0ft	    0m
+	0.995	  500ft	  152m
+	0.977	 1000ft	  305m
+	0.960	 1500ft	  457m
+	0.942	 2000ft	  610m
+	0.925	 2500ft	  762m
+	0.908	 3000ft	  914m
+	0.891	 3500ft	 1067m
+	0.875	 4000ft  1219m
+	0.843	 5000ft  1372m
+	0.812	 6000ft	 1524m
+	0.782	 7000ft	 1829m
+	0.753	 8000ft	 2134m
+	0.724	 9000ft	 2743m
+	0.697	10000ft	 3048m
+	0.572	15000ft	 4572m
+	0.446	20000ft	 6096m
+	0.301	30000ft	 9144m
+	0.118	40000ft 12192m
+
+(Source: https://www.mide.com/pages/air-pressure-at-altitude-calculator)
+
+--------------
+NDL Calculator
+--------------
+
+This tool computes how much time its possible to spend at a given ambiant
+pressure before returning to the surface would exceed the M-value (+GF)
+calculated by the choosen model.
+
+To use the tool, simply provide a series of "TIME DEPTH" pairs on the command
+line (meters and feet are supported). For example, this computes GF70 NDLS at
+100ft after spending 5 minutes at 100ft:
+
+	{0}[calvinow@Mozart ~] ./ndl-calculator -g 70 :5 100ft -d 100ft
+	Using GF-Hi 70%
+	Using depth pressure of 3.064 ('100ft')
+	00> '    :5  100ft' =>     300s at  3.221 bar
+	Computing loads...
+	Computing NDLs at 3.221 for surface pressure 0.800...
+	Load: 2.203 NDL: 170s
+	Load: 2.011 NDL: 139s
+	Load: 1.651 NDL: 168s
+	Load: 1.386 NDL: 235s
+	Load: 1.214 NDL: 308s
+	Load: 1.092 NDL: 391s
+	Load: 1.010 NDL: 458s
+	Load: 0.950 NDL: 595s
+	Load: 0.907 NDL: 798s
+	Load: 0.876 NDL: 1087s
+	Load: 0.857 NDL: 1386s
+	Load: 0.845 NDL: 1693s
+	Load: 0.835 NDL: 2036s
+	Load: 0.828 NDL: 2426s
+	Load: 0.822 NDL: 2853s
+	Load: 0.817 NDL: 3460s
+	Load: 0.813 NDL: 4138s
+
+These numbers are weird because we don't account for the ascent at all: your
+fancy dive computer assumes some maximal ascent rate when it calculates this
+number for you, so the fast tissues don't limit your diving nearly as much as
+they limit the results of this tool.
