@@ -4,6 +4,9 @@ most of it will probably just stay here.
 
 ================================================================================
 
+arduino:	Random small toy code written for Arduino that might be useful
+		for somebody else.
+
 benchmarks:	Set of small benchmarks for a few different implementations of
 		memcpy() and memset() on x86_64 CPUs.
 
