@@ -1,0 +1,5 @@
+.*
+!.gitignore
+*.o
+chess-engine
+chess-engine-test
