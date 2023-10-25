@@ -13,15 +13,10 @@ benchmarks:	Set of small benchmarks for a few different implementations of
 chess:		A half-baked chess engine I wrote for a class in college. It
 		plays to capture your pieces, not checkmate you.
 
-diving:		Simple utilities which model gas loading and decompression for
-		SCUBA diving.
-
 flying:		A collection of LaTeX checklists for airplanes I fly.
 
 planeyeller:	Hacky Python script that parses the output of an ADS-B decoder
 		and uses espeak to announce planes flying over your backyard.
-
-radio:		Mess of scripts for dealing with ADIF files and TrustedQSL.
 
 tvedit:		Weird mess of scripts for text-only video editing (lol).
 
