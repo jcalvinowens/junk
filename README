@@ -15,9 +15,6 @@ chess:		A half-baked chess engine I wrote for a class in college. It
 
 flying:		A collection of LaTeX checklists for airplanes I fly.
 
-planeyeller:	Hacky Python script that parses the output of an ADS-B decoder
-		and uses espeak to announce planes flying over your backyard.
-
 tvedit:		Weird mess of scripts for text-only video editing (lol).
 
 vorps:		Work in progress, code to compute position using VOR beacons.
